@@ -1,5 +1,7 @@
 "use client";
 import Loader from "@/components/Loader";
+import NotFound from "@/components/NotFound";
+import PrimaryButton from "@/components/PrimaryButton";
 import { logout } from "@/redux/features/auth/authSlice";
 import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
@@ -33,16 +35,20 @@ export default function Home() {
         <Loader />
       ) : (
         <main className="h-screen w-full flex items-center justify-center">
-          <button
-            className="w-fit absolute right-5 top-5 rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-700"
+          <PrimaryButton
             onClick={handleLogout}
+            className="bg-red-600 hover:bg-red-700 absolute right-5 top-5"
           >
             Logout
-          </button>
+          </PrimaryButton>
           <div className="md:h-[70vh] shadow border w-[calc(100%-10px)] md:w-1/2 p-3 rounded space-y-5 overflow-y-auto">
             <h1 className="text-center text-2xl font-bold">Todo List</h1>
             <TodoInput />
-            <TodoList todos={todos} />
+            {todos?.length ? (
+              <TodoList todos={todos} />
+            ) : (
+              <NotFound message="Task not found" />
+            )}
           </div>
         </main>
       )}

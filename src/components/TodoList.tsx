@@ -1,6 +1,7 @@
 import { toggleTodo } from "@/redux/features/todos/todoSlice";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useDispatch } from "react-redux";
+import NotFound from "./NotFound";
 import TodoItem from "./TodoItem";
 
 interface Todo {
@@ -26,37 +27,48 @@ const TodoList = ({ todos }: { todos: Todo[] }) => {
           <h2 className="bg-gray-200 py-2 rounded text-center font-medium">
             Created Todos
           </h2>
-          <Droppable droppableId="board-1">
-            {(provided) => (
-              <ul
-                className="space-y-1.5"
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-              >
-                {createdTodos.map((todo) => (
-                  <TodoItem key={todo.id} todo={todo} />
-                ))}
-              </ul>
-            )}
-          </Droppable>
+          {createdTodos?.length ? (
+            <Droppable droppableId="board-1">
+              {(provided) => (
+                <ul
+                  className="space-y-1.5"
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  {createdTodos.map((todo) => (
+                    <TodoItem key={todo.id} todo={todo} />
+                  ))}
+                </ul>
+              )}
+            </Droppable>
+          ) : (
+            <NotFound
+              message="No new task is available"
+              className="text-base"
+            />
+          )}
         </div>
         <div className="w-full md:w-1/2 space-y-2">
           <h2 className="bg-gray-200 py-2 rounded text-center font-medium">
             Completed Todos
           </h2>
-          <Droppable droppableId="board-2">
-            {(provided) => (
-              <ul
-                className="space-y-1.5"
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-              >
-                {completedTodos.map((todo) => (
-                  <TodoItem key={todo.id} todo={todo} />
-                ))}
-              </ul>
-            )}
-          </Droppable>
+          {completedTodos?.length ? (
+            <Droppable droppableId="board-2">
+              {(provided) => (
+                <ul
+                  className="space-y-1.5"
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  {completedTodos.map((todo) => (
+                    <TodoItem key={todo.id} todo={todo} />
+                  ))}
+                </ul>
+              )}
+            </Droppable>
+          ) : (
+            <NotFound message="No task completed" className="text-base" />
+          )}
         </div>
       </div>
     </DragDropContext>

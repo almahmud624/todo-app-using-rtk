@@ -15,10 +15,9 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     login(state, action) {
-      // Assuming login logic happens entirely on the client-side (e.g., form validation)
       const { username, email } = action.payload;
       state.isLoggedIn = true;
-      state.user = { username, email }; // Save user data locally
+      state.user = { username, email }; // Save user data in locally
       localStorage.setItem("userData", JSON.stringify(state.user));
     },
     logout(state) {

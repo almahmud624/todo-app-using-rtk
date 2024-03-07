@@ -8,13 +8,15 @@ interface Todo {
 
 interface TodoState {
   todos: Todo[];
+  editingTodoId?: number | null;
 }
 
 const initialState: TodoState = {
   todos: [],
+  editingTodoId: null,
 };
 
-const generateId = () => Math.floor(Math.random() * 100000); // Simple ID generation
+const generateId = () => Math.floor(Math.random() * 100000); // Generating unique ID for each todo
 
 const todoSlice = createSlice({
   name: "todo",
@@ -34,30 +36,23 @@ const todoSlice = createSlice({
       }
     },
     updateTodo(state, action) {
-      const index = state.todos.findIndex(
-        (todo) => todo.id === action.payload.id
-      );
+      const updatedTodo = action.payload;
+      const index = state.todos.findIndex((todo) => todo.id === updatedTodo.id);
       if (index !== -1) {
-        state.todos[index].text = action.payload.text;
+        state.todos[index] = updatedTodo;
       }
+      state.editingTodoId = null;
     },
-    removeTodoFromList(state, action) {
-      const { todoId, sourceListId } = action.payload;
-      state.todos = state.todos.filter(
-        (todo) =>
-          todo.id !== todoId ||
-          todo.completed !== (sourceListId === "completed")
-      );
+    editableTodo(state, action) {
+      const todoId = action.payload;
+      state.editingTodoId = todoId;
     },
-    addTodoToList(state, action) {
-      const { todoId, destinationListId } = action.payload;
-      const updatedTodo = state.todos.find((todo) => todo.id === todoId);
-      if (!updatedTodo) return; // Todo not found, do nothing
-
-      const completed = destinationListId === "completed";
-      state.todos = state.todos.map((todo) =>
-        todo.id === todoId ? { ...todo, completed } : todo
-      );
+    discardEdit(state) {
+      state.editingTodoId = null;
+    },
+    deleteTodo(state, action) {
+      const todoId = action.payload;
+      state.todos = state.todos.filter((todo) => todo.id !== todoId);
     },
   },
 });
@@ -66,7 +61,8 @@ export const {
   addTodo,
   toggleTodo,
   updateTodo,
-  addTodoToList,
-  removeTodoFromList,
+  editableTodo,
+  discardEdit,
+  deleteTodo,
 } = todoSlice.actions;
 export default todoSlice.reducer;

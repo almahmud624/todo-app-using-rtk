@@ -1,11 +1,20 @@
 "use client";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addTodo } from "../redux/features/todos/todoSlice"; // Import addTodo action creator
+import { RootState } from "@/redux/store";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addTodo,
+  discardEdit,
+  updateTodo,
+} from "../redux/features/todos/todoSlice"; // Import addTodo action creator
+import PrimaryButton from "./PrimaryButton";
 
 const TodoInput = () => {
   const [todoText, setTodoText] = useState("");
   const dispatch = useDispatch();
+  const { todos, editingTodoId } = useSelector(
+    (state: RootState) => state.todo
+  );
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -15,6 +24,25 @@ const TodoInput = () => {
     }
   };
 
+  // Update the todo
+  const handleUpdate = () => {
+    dispatch(updateTodo({ id: editingTodoId, text: todoText }));
+    setTodoText("");
+  };
+
+  // Set editingTaskId to null
+  const handleDiscard = () => {
+    dispatch(discardEdit());
+    setTodoText("");
+  };
+
+  useEffect(() => {
+    if (editingTodoId) {
+      // find editable todo
+      const todo = todos.find((todo) => todo.id === editingTodoId);
+      setTodoText(todo?.text ?? "");
+    }
+  }, [todos, editingTodoId]);
   return (
     <form onSubmit={handleSubmit} className="flex items-center gap-x-2">
       <input
@@ -24,12 +52,19 @@ const TodoInput = () => {
         placeholder="Add a new to-do"
         className="flex-1 w-full rounded-md border border-gray-300 py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 sm:text-sm sm:leading-6 px-2"
       />
-      <button
-        type="submit"
-        className="rounded-md bg-green-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-700 "
-      >
-        Add
-      </button>
+      {editingTodoId ? (
+        <div className="space-x-1">
+          <PrimaryButton onClick={handleUpdate}>Update</PrimaryButton>
+          <PrimaryButton
+            onClick={handleDiscard}
+            className="bg-red-600 hover:bg-red-700"
+          >
+            Discard
+          </PrimaryButton>
+        </div>
+      ) : (
+        <PrimaryButton type="submit">Add</PrimaryButton>
+      )}
     </form>
   );
 };
