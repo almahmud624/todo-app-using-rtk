@@ -5,7 +5,7 @@ interface NotFoundProps {
 export default function NotFound({ message, className }: NotFoundProps) {
   return (
     <div
-      className={`h-[30vh] grid place-items-center text-xl font-semibold text-red-600 ${className}`}
+      className={`h-[10vh] md:h-[30vh] grid place-items-center text-xl font-semibold text-red-600 ${className}`}
     >
       {message}
     </div>

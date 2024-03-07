@@ -44,7 +44,10 @@ const TodoInput = () => {
     }
   }, [todos, editingTodoId]);
   return (
-    <form onSubmit={handleSubmit} className="flex items-center gap-x-2">
+    <form
+      onSubmit={handleSubmit}
+      className="flex md:flex-row flex-col items-center gap-2"
+    >
       <input
         type="text"
         value={todoText}
@@ -53,17 +56,21 @@ const TodoInput = () => {
         className="flex-1 w-full rounded-md border border-gray-300 py-1.5 text-gray-900 shadow-sm placeholder:text-gray-400 sm:text-sm sm:leading-6 px-2"
       />
       {editingTodoId ? (
-        <div className="space-x-1">
-          <PrimaryButton onClick={handleUpdate}>Update</PrimaryButton>
+        <div className="flex gap-1 w-full md:w-auto">
+          <PrimaryButton onClick={handleUpdate} className="w-full md:w-auto">
+            Update
+          </PrimaryButton>
           <PrimaryButton
             onClick={handleDiscard}
-            className="bg-red-600 hover:bg-red-700"
+            className="bg-red-600 hover:bg-red-700 w-full md:w-auto"
           >
             Discard
           </PrimaryButton>
         </div>
       ) : (
-        <PrimaryButton type="submit">Add</PrimaryButton>
+        <PrimaryButton type="submit" className="w-full md:w-auto">
+          Add
+        </PrimaryButton>
       )}
     </form>
   );
