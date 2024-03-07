@@ -6,7 +6,6 @@ import RouteGuard from "@/components/RouteGuard";
 import { useAuthCheck } from "@/hooks/useAuthCheck";
 import { logout } from "@/redux/features/auth/authSlice";
 import { RootState } from "@/redux/store";
-import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import TodoInput from "../components/TodoInput";
 import TodoList from "../components/TodoList";
@@ -14,9 +13,7 @@ import TodoList from "../components/TodoList";
 export default function Home() {
   const dispatch = useDispatch();
   const todos = useSelector((state: RootState) => state.todo.todos);
-  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
   const authCheck = useAuthCheck();
-  const router = useRouter();
 
   const handleLogout = () => {
     dispatch(logout());
